@@ -4,15 +4,15 @@ self.__precacheManifest = [
     "url": "/react-plot-axis/static/js/runtime~main.176a1312.js"
   },
   {
-    "revision": "702c98e57324c2fd4bd3",
-    "url": "/react-plot-axis/static/js/main.9ba6ffea.chunk.js"
+    "revision": "5ca712556a2479db3b85",
+    "url": "/react-plot-axis/static/js/main.bca43c66.chunk.js"
   },
   {
     "revision": "4c5913a1766cd9e890b1",
     "url": "/react-plot-axis/static/js/2.3ffda027.chunk.js"
   },
   {
-    "revision": "c0eda9be6c4fa6af292f206c429fdd5f",
+    "revision": "3a78c0633c0de88fb6f2b37d52e76fba",
     "url": "/react-plot-axis/index.html"
   }
 ];
