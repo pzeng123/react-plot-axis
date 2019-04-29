@@ -1,5 +1,5 @@
-import React, {Component, Fragment} from 'react';
-import ReactDOM from 'react-dom';
+import React, {Component, Fragment} from "react";
+import ReactDOM from "react-dom";
 import {DateXAxis} from "./lib";
 
 class App extends Component {
