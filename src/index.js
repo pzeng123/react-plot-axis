@@ -1,8 +1,9 @@
 import React, {Component, Fragment} from "react";
 import ReactDOM from "react-dom";
 import {DateXAxis} from "./lib";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
-class App extends Component {
+class DateXAxisBundle extends Component {
   constructor(props) {
     super(props);
     this.state = {width: 1000,
@@ -48,6 +49,16 @@ class App extends Component {
       </Fragment>
     );
   }
+}
+
+
+const App = (props)=>{
+  return (
+    <Router>
+      <Link to="/DateXAxis">DateXAxis</Link>
+      <Route path="/DateXAxis" exact component={DateXAxisBundle}/>
+    </Router>
+  );
 }
 
 ReactDOM.render(<App/>, document.getElementById('root'));

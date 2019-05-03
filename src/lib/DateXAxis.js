@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import PropTypes from "proptypes";
+import PropTypes from "prop-types";
 
 import {bisect_left, bisect_right} from "bisect";
 import {toDomXCoord_Linear,generateDateGrids} from "plot-utils";
