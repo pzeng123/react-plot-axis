@@ -6,7 +6,7 @@
     "plot-utils": "github:zhoulytwinyu/plot-utils"
   },
   "peerDependencies": {
-    "proptypes": "^1.1.0",
+    "prop-types": "^1.1.0",
     "react": "^16.8.6"
   },
   "scripts": {
@@ -41,7 +41,6 @@
     "babel-preset-stage-0": "^6.24.1",
     "gh-pages": "^2.0.1",
     "prop-types": "^15.7.2",
-    "proptypes": "^1.1.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-router-dom": "^5.0.0",

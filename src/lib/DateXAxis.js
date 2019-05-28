@@ -108,15 +108,13 @@ class DateXAxis extends PureComponent {
   }
   
   ticPlot(ctx,width,height,domXs,tickPosition){
-    let y;
     switch (tickPosition) {
       case "top":
       default:
         ctx.beginPath();
-        y = Math.round(height*0.1);
         for (let x of domXs){
           ctx.moveTo(Math.round(x)+0.5,0);
-          ctx.lineTo(Math.round(x)+0.5,y);
+          ctx.lineTo(Math.round(x)+0.5,10);
         }
         ctx.moveTo(0,0.5);
         ctx.lineTo(width,0.5);
@@ -124,9 +122,8 @@ class DateXAxis extends PureComponent {
         break;
       case "bottom":
         ctx.beginPath();
-        y = Math.round(height*0.9);
         for (let x of domXs){
-          ctx.moveTo(Math.round(x)+0.5,y);
+          ctx.moveTo(Math.round(x)+0.5,height-10);
           ctx.lineTo(Math.round(x)+0.5,height);
         }
         ctx.moveTo(0,height-0.5);
