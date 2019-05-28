@@ -10,6 +10,10 @@ var _react = require("react");
 
 var _react2 = _interopRequireDefault(_react);
 
+var _propTypes = require("prop-types");
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
 var _bisect = require("bisect");
 
 var _plotUtils = require("plot-utils");
@@ -22,19 +26,19 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var DateVerticalGridLines = function (_PureComponent) {
-  _inherits(DateVerticalGridLines, _PureComponent);
+var DateVerticalLineGrid = function (_PureComponent) {
+  _inherits(DateVerticalLineGrid, _PureComponent);
 
-  function DateVerticalGridLines(props) {
-    _classCallCheck(this, DateVerticalGridLines);
+  function DateVerticalLineGrid(props) {
+    _classCallCheck(this, DateVerticalLineGrid);
 
-    var _this = _possibleConstructorReturn(this, (DateVerticalGridLines.__proto__ || Object.getPrototypeOf(DateVerticalGridLines)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (DateVerticalLineGrid.__proto__ || Object.getPrototypeOf(DateVerticalLineGrid)).call(this, props));
 
     _this.ref = _react2.default.createRef();
     return _this;
   }
 
-  _createClass(DateVerticalGridLines, [{
+  _createClass(DateVerticalLineGrid, [{
     key: "render",
     value: function render() {
       var _props = this.props,
@@ -149,7 +153,14 @@ var DateVerticalGridLines = function (_PureComponent) {
     }
   }]);
 
-  return DateVerticalGridLines;
+  return DateVerticalLineGrid;
 }(_react.PureComponent);
 
-exports.default = DateVerticalGridLines;
+DateVerticalLineGrid.propTypes = {
+  minX: _propTypes2.default.number.isRequired,
+  maxX: _propTypes2.default.number.isRequired,
+  width: _propTypes2.default.number.isRequired,
+  height: _propTypes2.default.number.isRequired
+};
+
+exports.default = DateVerticalLineGrid;

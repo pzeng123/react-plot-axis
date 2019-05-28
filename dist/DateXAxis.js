@@ -10,9 +10,9 @@ var _react = require("react");
 
 var _react2 = _interopRequireDefault(_react);
 
-var _proptypes = require("proptypes");
+var _propTypes = require("prop-types");
 
-var _proptypes2 = _interopRequireDefault(_proptypes);
+var _propTypes2 = _interopRequireDefault(_propTypes);
 
 var _bisect = require("bisect");
 
@@ -175,12 +175,10 @@ var DateXAxis = function (_PureComponent) {
   }, {
     key: "ticPlot",
     value: function ticPlot(ctx, width, height, domXs, tickPosition) {
-      var y = void 0;
       switch (tickPosition) {
         case "top":
         default:
           ctx.beginPath();
-          y = Math.round(height * 0.1);
           var _iteratorNormalCompletion2 = true;
           var _didIteratorError2 = false;
           var _iteratorError2 = undefined;
@@ -190,7 +188,7 @@ var DateXAxis = function (_PureComponent) {
               var x = _step2.value;
 
               ctx.moveTo(Math.round(x) + 0.5, 0);
-              ctx.lineTo(Math.round(x) + 0.5, y);
+              ctx.lineTo(Math.round(x) + 0.5, 10);
             }
           } catch (err) {
             _didIteratorError2 = true;
@@ -213,7 +211,6 @@ var DateXAxis = function (_PureComponent) {
           break;
         case "bottom":
           ctx.beginPath();
-          y = Math.round(height * 0.9);
           var _iteratorNormalCompletion3 = true;
           var _didIteratorError3 = false;
           var _iteratorError3 = undefined;
@@ -222,7 +219,7 @@ var DateXAxis = function (_PureComponent) {
             for (var _iterator3 = domXs[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
               var _x = _step3.value;
 
-              ctx.moveTo(Math.round(_x) + 0.5, y);
+              ctx.moveTo(Math.round(_x) + 0.5, height - 10);
               ctx.lineTo(Math.round(_x) + 0.5, height);
             }
           } catch (err) {
@@ -252,11 +249,11 @@ var DateXAxis = function (_PureComponent) {
 }(_react.PureComponent);
 
 DateXAxis.propTypes = {
-  minX: _proptypes2.default.number.isRequired,
-  maxX: _proptypes2.default.number.isRequired,
-  width: _proptypes2.default.number.isRequired,
-  height: _proptypes2.default.number.isRequired,
-  tickPosition: _proptypes2.default.string.isRequired
+  minX: _propTypes2.default.number.isRequired,
+  maxX: _propTypes2.default.number.isRequired,
+  width: _propTypes2.default.number.isRequired,
+  height: _propTypes2.default.number.isRequired,
+  tickPosition: _propTypes2.default.string.isRequired
 };
 
 exports.default = DateXAxis;

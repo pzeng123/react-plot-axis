@@ -10,11 +10,13 @@ var _react = require("react");
 
 var _react2 = _interopRequireDefault(_react);
 
+var _propTypes = require("prop-types");
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
 var _bisect = require("bisect");
 
 var _plotUtils = require("plot-utils");
-
-var _dateFns = require("date-fns");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -118,5 +120,12 @@ var YAxisSlabGrid = function (_PureComponent) {
 
   return YAxisSlabGrid;
 }(_react.PureComponent);
+
+YAxisSlabGrid.propTypes = {
+  minX: _propTypes2.default.number.isRequired,
+  maxX: _propTypes2.default.number.isRequired,
+  width: _propTypes2.default.number.isRequired,
+  height: _propTypes2.default.number.isRequired
+};
 
 exports.default = YAxisSlabGrid;

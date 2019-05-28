@@ -10,11 +10,13 @@ var _react = require("react");
 
 var _react2 = _interopRequireDefault(_react);
 
+var _propTypes = require("prop-types");
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
 var _bisect = require("bisect");
 
 var _plotUtils = require("plot-utils");
-
-var _dateFns = require("date-fns");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -60,8 +62,6 @@ var YAxis = function (_PureComponent) {
   }, {
     key: "draw",
     value: function draw() {
-      var _this2 = this;
-
       var _props2 = this.props,
           minY = _props2.minY,
           maxY = _props2.maxY,
@@ -85,10 +85,7 @@ var YAxis = function (_PureComponent) {
         memo.validFromDiff = validFromDiff;
         memo.validToDiff = validToDiff;
         memo.grids = grids;
-        var gridLabels = this.getGridLabels(grids);
-        memo.labelBitmaps = gridLabels.map(function (text) {
-          return _this2.createTextBitmaps(text);
-        });
+        memo.gridLabels = this.getGridLabels(grids);
       }
       // Filter
       var startIndex = Math.max(0, (0, _bisect.bisect_right)(memo.grids, minY));
@@ -97,19 +94,19 @@ var YAxis = function (_PureComponent) {
       var domYs = memo.grids.slice(startIndex, endIndex + 1).map(function (y) {
         return (0, _plotUtils.toDomYCoord_Linear)(height, minY, maxY, y);
       });
-      var labelBitmaps = memo.labelBitmaps.slice(startIndex, endIndex + 1);
+      var gridLabels = memo.gridLabels.slice(startIndex, endIndex + 1);
       // Plot
       var canvas = this.ref.current;
       var ctx = canvas.getContext("2d");
       ctx.clearRect(0, 0, width, height);
-      this.bitmapPlot(ctx, width, height, domYs, labelBitmaps, tickPosition);
+      this.textPlot(ctx, width, height, domYs, gridLabels);
       this.ticPlot(ctx, width, height, domYs, tickPosition);
     }
   }, {
     key: "getGridLabels",
     value: function getGridLabels(grids) {
       return grids.map(function (grid) {
-        if (grid > 1) {
+        if (grid > 10 || grid < -10) {
           return Math.round(grid);
         } else {
           return Number.parseFloat(grid).toFixed(2);
@@ -117,39 +114,15 @@ var YAxis = function (_PureComponent) {
       });
     }
   }, {
-    key: "createTextBitmaps",
-    value: function createTextBitmaps(text) {
-      var font = "12px Sans";
-      var canvas = document.createElement("canvas");
-      var ctx = canvas.getContext("2d");
-      ctx.font = font;
-      var width = ctx.measureText(text).width;
-      var height = 12;
-      canvas.width = width;
-      canvas.height = height;
-      ctx.font = font;
+    key: "textPlot",
+    value: function textPlot(ctx, width, height, domYs, texts) {
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillText(text, width / 2, height / 2);
-      return canvas;
-    }
-  }, {
-    key: "bitmapPlot",
-    value: function bitmapPlot(ctx, width, height, domYs, bitmaps, tickPosition) {
-      if (tickPosition === "left") {
-        for (var i = 0; i < domYs.length; i++) {
-          var bitmap = bitmaps[i];
-          var x = Math.round(10);
-          var y = Math.round(domYs[i] - bitmap.height / 2);
-          ctx.drawImage(bitmap, x, y);
-        }
-      } else if (tickPosition === "right") {
-        for (var _i = 0; _i < domYs.length; _i++) {
-          var _bitmap = bitmaps[_i];
-          var _x = Math.round(width - 5 - _bitmap.width);
-          var _y = Math.round(domYs[_i] - _bitmap.height / 2);
-          ctx.drawImage(_bitmap, _x, _y);
-        }
+      for (var i = 0; i < domYs.length; i++) {
+        var text = texts[i];
+        var x = Math.round(width / 2);
+        var y = Math.round(domYs[i]);
+        ctx.fillText(text, x, y);
       }
     }
   }, {
@@ -200,10 +173,10 @@ var YAxis = function (_PureComponent) {
 
           try {
             for (var _iterator2 = domYs[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-              var _y2 = _step2.value;
+              var _y = _step2.value;
 
-              ctx.moveTo(x, Math.round(_y2));
-              ctx.lineTo(width, Math.round(_y2));
+              ctx.moveTo(x, Math.round(_y));
+              ctx.lineTo(width, Math.round(_y));
             }
           } catch (err) {
             _didIteratorError2 = true;
@@ -230,5 +203,13 @@ var YAxis = function (_PureComponent) {
 
   return YAxis;
 }(_react.PureComponent);
+
+YAxis.propTypes = {
+  minX: _propTypes2.default.number.isRequired,
+  maxX: _propTypes2.default.number.isRequired,
+  width: _propTypes2.default.number.isRequired,
+  height: _propTypes2.default.number.isRequired,
+  tickPosition: _propTypes2.default.string.isRequired
+};
 
 exports.default = YAxis;
