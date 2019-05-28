@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import {bisect_left,bisect_right} from "bisect";
 import {toDomXCoord_Linear,generateDateGrids} from "plot-utils";
 
-class DateVerticalGridLines extends PureComponent {
+class DateVerticalLineGrid extends PureComponent {
   constructor(props) {
     super(props);
     this.ref= React.createRef();
@@ -88,11 +88,11 @@ class DateVerticalGridLines extends PureComponent {
   }
 }
 
-DateVerticalGridLines.propTypes = {
+DateVerticalLineGrid.propTypes = {
   minX: PropTypes.number.isRequired,
   maxX: PropTypes.number.isRequired,
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired
 }
 
-export default DateVerticalGridLines;
+export default DateVerticalLineGrid;

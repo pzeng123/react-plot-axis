@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
+import PropTypes from "prop-types"; 
 import {bisect_left, bisect_right} from "bisect";
 import {toDomYCoord_Linear, generateGrids} from "plot-utils";
-import {format} from "date-fns";
 
 class YAxis extends PureComponent {
   constructor(props) {
@@ -46,26 +46,25 @@ class YAxis extends PureComponent {
       memo.validFromDiff = validFromDiff;
       memo.validToDiff = validToDiff;
       memo.grids = grids;
-      let gridLabels = this.getGridLabels(grids);
-      memo.labelBitmaps = gridLabels.map((text)=>this.createTextBitmaps(text));
+      memo.gridLabels = this.getGridLabels(grids);
     }
     // Filter
     let startIndex = Math.max(0,bisect_right(memo.grids,minY));
     let endIndex = Math.min(memo.grids.length-1,bisect_left(memo.grids,maxY));
     
     let domYs = memo.grids.slice(startIndex,endIndex+1).map( (y)=>toDomYCoord_Linear(height,minY,maxY,y));
-    let labelBitmaps = memo.labelBitmaps.slice(startIndex,endIndex+1);
+    let gridLabels = memo.gridLabels.slice(startIndex,endIndex+1);
     // Plot
     let canvas = this.ref.current;
     let ctx = canvas.getContext("2d");
     ctx.clearRect(0,0,width,height);
-    this.bitmapPlot(ctx,width,height,domYs,labelBitmaps,tickPosition);
+    this.textPlot(ctx,width,height,domYs,gridLabels);
     this.ticPlot(ctx,width,height,domYs,tickPosition);
   }
   
   getGridLabels(grids){
     return grids.map((grid)=>{
-      if (grid>1) {
+      if (grid>10 || grid<-10) {
         return Math.round(grid);
       }
       else {
@@ -73,39 +72,15 @@ class YAxis extends PureComponent {
       }
     });
   }
-  
-  createTextBitmaps(text) {
-    let font = "12px Sans";
-    let canvas = document.createElement("canvas");
-    let ctx = canvas.getContext("2d");
-    ctx.font = font;
-    let width = ctx.measureText(text).width;
-    let height = 12;
-    canvas.width = width;
-    canvas.height = height;
-    ctx.font = font;
+
+  textPlot(ctx,width,height,domYs,texts){
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(text,width/2,height/2);
-    return canvas;
-  }
-
-  bitmapPlot(ctx,width,height,domYs,bitmaps,tickPosition){
-    if (tickPosition === "left") {
-      for (let i=0; i<domYs.length; i++) {
-        let bitmap = bitmaps[i];
-        let x = Math.round(10);
-        let y = Math.round(domYs[i]-bitmap.height/2);
-        ctx.drawImage(bitmap,x,y);
-      }
-    }
-    else if (tickPosition === "right") {
-      for (let i=0; i<domYs.length; i++) {
-        let bitmap = bitmaps[i];
-        let x = Math.round(width-5-bitmap.width);
-        let y = Math.round(domYs[i]-bitmap.height/2);
-        ctx.drawImage(bitmap,x,y);
-      }
+    for (let i=0; i<domYs.length; i++) {
+      let text = texts[i];
+      let x = Math.round(width/2);
+      let y = Math.round(domYs[i]);
+      ctx.fillText(text,x,y);
     }
   }
   
@@ -137,6 +112,14 @@ class YAxis extends PureComponent {
         break;
     }
   }
+}
+
+YAxis.propTypes = {
+  minX: PropTypes.number.isRequired,
+  maxX: PropTypes.number.isRequired,
+  width: PropTypes.number.isRequired,
+  height: PropTypes.number.isRequired,
+  tickPosition: PropTypes.string.isRequired,
 }
 
 export default YAxis;

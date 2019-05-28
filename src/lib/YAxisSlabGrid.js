@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
+import PropTypes from "prop-types";
 import {bisect_left, bisect_right} from "bisect";
 import {toDomYCoord_Linear, generateGrids} from "plot-utils";
-import {format} from "date-fns";
 
 class YAxisSlabGrid extends PureComponent {
   constructor(props) {
@@ -74,6 +74,13 @@ class YAxisSlabGrid extends PureComponent {
       prevY = currentY;
     }
   }
+}
+
+YAxisSlabGrid.propTypes = {
+  minX: PropTypes.number.isRequired,
+  maxX: PropTypes.number.isRequired,
+  width: PropTypes.number.isRequired,
+  height: PropTypes.number.isRequired
 }
 
 export default YAxisSlabGrid;

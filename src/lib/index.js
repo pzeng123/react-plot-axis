@@ -1,5 +1,7 @@
 import DateXAxis from "./DateXAxis";
-import DateVerticalGridLines from "./DateVerticalGridLines";
+import DateVerticalLineGrid from "./DateVerticalLineGrid";
+import YAxis from "./YAxis";
+import YAxisSlabGrid from "./YAxisSlabGrid";
 
-
-export {DateXAxis,DateVerticalGridLines};
+export {DateXAxis,DateVerticalLineGrid,
+        YAxis,YAxisSlabGrid};
