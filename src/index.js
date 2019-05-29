@@ -1,7 +1,7 @@
 import React, {Component, Fragment} from "react";
 import ReactDOM from "react-dom";
 import {DateXAxis,DateVerticalLineGrid,YAxis,YAxisSlabGrid} from "./lib";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { HashRouter as Router, Route, Link } from "react-router-dom";
 
 // CSS
 import "./index.css";
