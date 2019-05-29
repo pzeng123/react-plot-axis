@@ -1,13 +1,15 @@
 {
-  "main.css": "/react-plot-axis/static/css/main.c7290c5f.chunk.css",
-  "main.js": "/react-plot-axis/static/js/main.893904ca.chunk.js",
-  "main.js.map": "/react-plot-axis/static/js/main.893904ca.chunk.js.map",
-  "runtime~main.js": "/react-plot-axis/static/js/runtime~main.176a1312.js",
-  "runtime~main.js.map": "/react-plot-axis/static/js/runtime~main.176a1312.js.map",
-  "static/js/2.38825750.chunk.js": "/react-plot-axis/static/js/2.38825750.chunk.js",
-  "static/js/2.38825750.chunk.js.map": "/react-plot-axis/static/js/2.38825750.chunk.js.map",
-  "index.html": "/react-plot-axis/index.html",
-  "precache-manifest.637d8fb059cfc6bf71ee9354c9ab9bb6.js": "/react-plot-axis/precache-manifest.637d8fb059cfc6bf71ee9354c9ab9bb6.js",
-  "service-worker.js": "/react-plot-axis/service-worker.js",
-  "static/css/main.c7290c5f.chunk.css.map": "/react-plot-axis/static/css/main.c7290c5f.chunk.css.map"
+  "files": {
+    "main.css": "/react-plot-axis/static/css/main.9d313dd0.chunk.css",
+    "main.js": "/react-plot-axis/static/js/main.d19bd926.chunk.js",
+    "main.js.map": "/react-plot-axis/static/js/main.d19bd926.chunk.js.map",
+    "runtime~main.js": "/react-plot-axis/static/js/runtime~main.176a1312.js",
+    "runtime~main.js.map": "/react-plot-axis/static/js/runtime~main.176a1312.js.map",
+    "static/js/2.b35c4456.chunk.js": "/react-plot-axis/static/js/2.b35c4456.chunk.js",
+    "static/js/2.b35c4456.chunk.js.map": "/react-plot-axis/static/js/2.b35c4456.chunk.js.map",
+    "index.html": "/react-plot-axis/index.html",
+    "precache-manifest.d1b830314c3fed9b3d38ef10bca76f13.js": "/react-plot-axis/precache-manifest.d1b830314c3fed9b3d38ef10bca76f13.js",
+    "service-worker.js": "/react-plot-axis/service-worker.js",
+    "static/css/main.9d313dd0.chunk.css.map": "/react-plot-axis/static/css/main.9d313dd0.chunk.css.map"
+  }
 }
