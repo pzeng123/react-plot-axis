@@ -87,7 +87,12 @@ function (_PureComponent) {
           maxX = _this$props2.maxX,
           width = _this$props2.width,
           height = _this$props2.height,
-          tickPosition = _this$props2.tickPosition;
+          tickPosition = _this$props2.tickPosition,
+          fontSize = _this$props2.fontSize,
+          isItalic = _this$props2.isItalic,
+          fontWeight = _this$props2.fontWeight,
+          strokeStyle = _this$props2.strokeStyle,
+          lineWidth = _this$props2.lineWidth;
       this.draw_memo = this.draw_memo || {
         validFromDiff: 0,
         validToDiff: -1,
@@ -123,8 +128,14 @@ function (_PureComponent) {
       var canvas = this.ref.current;
       var ctx = canvas.getContext("2d");
       ctx.clearRect(0, 0, width, height);
-      this.textPlot(ctx, width, height, domXs, gridLabels);
-      this.ticPlot(ctx, width, height, domXs, tickPosition);
+
+      if (fontSize && fontWeight) {
+        this.textPlot(ctx, width, height, domXs, gridLabels, fontSize, fontWeight, isItalic);
+      } else {
+        this.textPlot(ctx, width, height, domXs, gridLabels, 12, 400, isItalic);
+      }
+
+      this.ticPlot(ctx, width, height, domXs, tickPosition, strokeStyle, lineWidth);
     }
   }, {
     key: "getGridLabels",
@@ -189,9 +200,15 @@ function (_PureComponent) {
     }
   }, {
     key: "textPlot",
-    value: function textPlot(ctx, width, height, domXs, texts) {
+    value: function textPlot(ctx, width, height, domXs, texts, fontSize, fontWeight, isItalic) {
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
+
+      if (isItalic) {
+        ctx.font = "italic " + fontWeight + " " + fontSize + "px MuseoSans, Sans";
+      } else {
+        ctx.font = fontWeight + " " + fontSize + "px MuseoSans, Sans";
+      }
 
       for (var i = 0; i < domXs.length; i++) {
         var text = texts[i];
@@ -202,7 +219,15 @@ function (_PureComponent) {
     }
   }, {
     key: "ticPlot",
-    value: function ticPlot(ctx, width, height, domXs, tickPosition) {
+    value: function ticPlot(ctx, width, height, domXs, tickPosition, strokeStyle, lineWidth) {
+      if (strokeStyle) {
+        ctx.strokeStyle = strokeStyle;
+      }
+
+      if (lineWidth) {
+        ctx.lineWidth = lineWidth;
+      }
+
       switch (tickPosition) {
         case "top":
         default:
