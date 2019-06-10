@@ -1,70 +1,90 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 
-import {bisect_left, bisect_right} from "bisect";
-import {toDomXCoord_Linear,generateDateGrids} from "plot-utils";
-import {format} from "date-fns";
+import { bisect_left, bisect_right } from "bisect";
+import { toDomXCoord_Linear, generateDateGrids } from "plot-utils";
+import { format } from "date-fns";
 
 class DateXAxis extends PureComponent {
   constructor(props) {
     super(props);
-    this.ref= React.createRef();
+    this.ref = React.createRef();
   }
-  
+
   render() {
-    let { width,height} = this.props;
+    let { width, height } = this.props;
     return (
-      <canvas ref={this.ref}  width={width} height={height}
-                              style={{width:width,height:height,display:"block"}}
-                              >
+      <canvas
+        ref={this.ref}
+        width={width}
+        height={height}
+        style={{ width: width, height: height, display: "block" }}
+      >
       </canvas>
     );
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.draw();
   }
-  
+
   componentDidUpdate() {
     this.draw();
   }
 
   draw() {
-    let { minX,maxX,
-          width,height,
-          tickPosition} = this.props;
-    this.draw_memo = this.draw_memo || {validFromDiff:0,validToDiff:-1,rangeMinX:0,rangeMaxX:-1};
+    let {
+      minX,
+      maxX,
+      width,
+      height,
+      tickPosition,
+      fontSize,
+      isItalic,
+      fontWeight,
+      strokeStyle,
+      lineWidth
+    } = this.props;
+    this.draw_memo = this.draw_memo || { validFromDiff: 0, validToDiff: -1, rangeMinX: 0, rangeMaxX: -1 };
     let memo = this.draw_memo;
-    let diffX = maxX-minX;
+    let diffX = maxX - minX;
+
     // Generate grids, labels and bitmaps in cache
-    if (memo.validFromDiff>diffX ||
-        diffX>memo.validToDiff ||
-        memo.rangeMinX>minX ||
-        maxX>memo.rangeMaxX
-        ) {
-      memo.rangeMinX = minX-10*diffX;
-      memo.rangeMaxX = maxX+10*diffX;
-      let {grids, validFromDiff, validToDiff} = generateDateGrids(minX,maxX,memo.rangeMinX,memo.rangeMaxX);
+    if (memo.validFromDiff > diffX ||
+      diffX > memo.validToDiff ||
+      memo.rangeMinX > minX ||
+      maxX > memo.rangeMaxX
+    ) {
+      memo.rangeMinX = minX - 10 * diffX;
+      memo.rangeMaxX = maxX + 10 * diffX;
+      let { grids, validFromDiff, validToDiff } = generateDateGrids(minX, maxX, memo.rangeMinX, memo.rangeMaxX);
       memo.validFromDiff = validFromDiff;
       memo.validToDiff = validToDiff;
       memo.grids = grids;
       memo.gridLabels = this.getGridLabels(grids);
     }
+
     // Filter
-    let startIndex = Math.max(0,bisect_right(memo.grids,minX));
-    let endIndex = Math.min(memo.grids.length-1,bisect_left(memo.grids,maxX));
-    
-    let domXs = memo.grids.slice(startIndex,endIndex+1).map( (x)=>toDomXCoord_Linear(width,minX,maxX,x));
-    let gridLabels = memo.gridLabels.slice(startIndex,endIndex+1);
+    let startIndex = Math.max(0, bisect_right(memo.grids, minX));
+    let endIndex = Math.min(memo.grids.length - 1, bisect_left(memo.grids, maxX));
+
+    let domXs = memo.grids.slice(startIndex, endIndex + 1).map((x) => toDomXCoord_Linear(width, minX, maxX, x));
+    let gridLabels = memo.gridLabels.slice(startIndex, endIndex + 1);
+
     // Plot
     let canvas = this.ref.current;
     let ctx = canvas.getContext("2d");
-    ctx.clearRect(0,0,width,height);
-    this.textPlot(ctx,width,height,domXs,gridLabels);
-    this.ticPlot(ctx,width,height,domXs,tickPosition);
+    ctx.clearRect(0, 0, width, height);
+
+    if (fontSize && fontWeight) {
+      this.textPlot(ctx, width, height, domXs, gridLabels, fontSize, fontWeight, isItalic);
+    } else {
+      this.textPlot(ctx, width, height, domXs, gridLabels, 12, 400, isItalic);
+    }
+    this.ticPlot(ctx, width, height, domXs, tickPosition, strokeStyle, lineWidth);
   }
-  
-  getGridLabels(grids){
+
+  getGridLabels(grids) {
     let labels = [];
     let t = new Date();
     for (let grid of grids) {
@@ -73,61 +93,76 @@ class DateXAxis extends PureComponent {
     }
     return labels;
   }
-  
-  getMeaningfulDateField(d){
-    if (d.getMilliseconds()===0) {
-      if (d.getSeconds()===0) {
-        if (d.getMinutes()===0){
-          if (d.getHours()===0){
-            if (d.getDate()===1) {
-              if (d.getMonth()===0) {
-                return format(d,"YYYY");
+
+  getMeaningfulDateField(d) {
+    if (d.getMilliseconds() === 0) {
+      if (d.getSeconds() === 0) {
+        if (d.getMinutes() === 0) {
+          if (d.getHours() === 0) {
+            if (d.getDate() === 1) {
+              if (d.getMonth() === 0) {
+                return format(d, "YYYY");
               }
-              return format(d,"MMM");
+              return format(d, "MMM");
             }
-            return format(d,"Do");
+            return format(d, "Do");
           }
-          return format(d,"HH:00");
+          return format(d, "HH:00");
         }
-        return format(d,"HH:mm");
+        return format(d, "HH:mm");
       }
-      return format(d,"HH:mm:ss");
+      return format(d, "HH:mm:ss");
     }
-    return format(d,"ss.SSS");
+    return format(d, "ss.SSS");
   }
 
-  textPlot(ctx,width,height,domXs,texts){
+  textPlot(ctx, width, height, domXs, texts, fontSize, fontWeight, isItalic) {
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    for (let i=0; i<domXs.length; i++) {
+
+    if (isItalic) {
+      ctx.font = "italic " + fontWeight + " " + fontSize + "px MuseoSans, Sans";
+    } else {
+      ctx.font = fontWeight + " " + fontSize + "px MuseoSans, Sans";
+    } 
+
+    for (let i = 0; i < domXs.length; i++) {
       let text = texts[i];
       let x = Math.round(domXs[i]);
-      let y = Math.round(height/2);
-      ctx.fillText(text,x,y);
+      let y = Math.round(height / 2);
+      ctx.fillText(text, x, y);
     }
   }
-  
-  ticPlot(ctx,width,height,domXs,tickPosition){
+
+  ticPlot(ctx, width, height, domXs, tickPosition, strokeStyle, lineWidth) {
+    if (strokeStyle) {
+      ctx.strokeStyle = strokeStyle
+    }
+
+    if (lineWidth) {
+      ctx.lineWidth = lineWidth
+    }
+    
     switch (tickPosition) {
       case "top":
       default:
         ctx.beginPath();
-        for (let x of domXs){
-          ctx.moveTo(Math.round(x)+0.5,0);
-          ctx.lineTo(Math.round(x)+0.5,10);
+        for (let x of domXs) {
+          ctx.moveTo(Math.round(x) + 0.5, 0);
+          ctx.lineTo(Math.round(x) + 0.5, 10);
         }
-        ctx.moveTo(0,0.5);
-        ctx.lineTo(width,0.5);
+        ctx.moveTo(0, 0.5);
+        ctx.lineTo(width, 0.5);
         ctx.stroke();
         break;
       case "bottom":
         ctx.beginPath();
-        for (let x of domXs){
-          ctx.moveTo(Math.round(x)+0.5,height-10);
-          ctx.lineTo(Math.round(x)+0.5,height);
+        for (let x of domXs) {
+          ctx.moveTo(Math.round(x) + 0.5, height - 10);
+          ctx.lineTo(Math.round(x) + 0.5, height);
         }
-        ctx.moveTo(0,height-0.5);
-        ctx.lineTo(width,height-0.5);
+        ctx.moveTo(0, height - 0.5);
+        ctx.lineTo(width, height - 0.5);
         ctx.stroke();
         break;
     }
