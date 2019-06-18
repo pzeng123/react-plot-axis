@@ -29,8 +29,7 @@ class YAxisSlabGrid extends PureComponent {
 
   draw() {
     let { minY,maxY,
-          width,height,
-          tickPosition} = this.props;
+          height} = this.props;
     this.draw_memo = this.draw_memo || {validFromDiff:0,validToDiff:-1,rangeMinY:0,rangeMaxY:-1};
     let memo = this.draw_memo;
     let diffY = maxY-minY;

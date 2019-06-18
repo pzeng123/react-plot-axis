@@ -74,7 +74,7 @@ class DateVerticalLineGridBundle extends Component {
   }
 
   render() {
-    let {width,height,minX,maxX,tickPosition} = this.state;
+    let {width,height,minX,maxX} = this.state;
     return (
       <Fragment>
         <div>
@@ -182,7 +182,7 @@ class YAxisSlabGridBundle extends Component {
   }
 
   render() {
-    let {width,height,minY,maxY,tickPosition} = this.state;
+    let {width,height,minY,maxY} = this.state;
     return (
       <Fragment>
         <div>
