@@ -83,9 +83,7 @@ function (_PureComponent) {
       var _this$props2 = this.props,
           minY = _this$props2.minY,
           maxY = _this$props2.maxY,
-          width = _this$props2.width,
-          height = _this$props2.height,
-          tickPosition = _this$props2.tickPosition;
+          height = _this$props2.height;
       this.draw_memo = this.draw_memo || {
         validFromDiff: 0,
         validToDiff: -1,
