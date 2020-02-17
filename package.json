@@ -4,6 +4,7 @@
   "dependencies": {
     "bisect": "github:zhoulytwinyu/bisect-js",
     "date-fns": "^1.30.1",
+    "moment": "^2.24.0",
     "plot-utils": "github:zhoulytwinyu/plot-utils"
   },
   "peerDependencies": {
@@ -11,16 +12,16 @@
     "react": "^16.8.6"
   },
   "devDependencies": {
-    "@babel/cli": "^7.4.4",
-    "@babel/core": "^7.4.5",
-    "@babel/preset-env": "^7.4.5",
-    "@babel/preset-react": "^7.0.0",
-    "gh-pages": "^2.0.1",
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.8.4",
+    "@babel/preset-env": "^7.8.4",
+    "@babel/preset-react": "^7.8.3",
+    "gh-pages": "^2.2.0",
     "prop-types": "^15.7.2",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "react-router-dom": "^5.0.0",
-    "react-scripts": "^3.0.1"
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "^3.3.1"
   },
   "scripts": {
     "start": "react-scripts start",
