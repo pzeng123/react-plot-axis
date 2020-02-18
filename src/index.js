@@ -19,7 +19,7 @@ class DateXAxisBundle extends Component {
       range: 1506780800000,
       tickPosition: "top"
     };
-    this.minX = 1277836800000;
+    this.minX = 1299836800000;
     this.maxX = 1506780800000;
     this.range = 1506780800000;
   }
@@ -166,6 +166,7 @@ class DateXAxisBundle extends Component {
           height={height}
           minX={minX}
           maxX={maxX}
+           dataMinX={this.minX}
           tickPosition={tickPosition}
           fontSize={13}
           fontWeight={200}
@@ -262,6 +263,7 @@ class DateVerticalLineGridBundle extends Component {
             height={50}
             minX={minX}
             maxX={maxX}
+            dataMinX={this.minX}
             tickPosition="top"
           />
         </div>
