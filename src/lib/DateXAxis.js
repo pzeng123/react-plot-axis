@@ -5,10 +5,15 @@ import { bisect_left, bisect_right } from "bisect";
 import { toDomXCoord_Linear, generateDateGrids } from "plot-utils";
 import { format } from "date-fns";
 
+const SHIFT_HOURS_DST = 4;
+const SHIFT_HOURS_NON_DST = 5;
+const SHIFT_HOURS = SHIFT_HOURS_DST;
+
 class DateXAxis extends PureComponent {
   constructor(props) {
     super(props);
     this.ref = React.createRef();
+    this.displayDayAlready = true;
   }
 
   render() {
@@ -82,6 +87,34 @@ class DateXAxis extends PureComponent {
       this.textPlot(ctx, width, height, domXs, gridLabels, 12, 400, isItalic);
     }
     this.ticPlot(ctx, width, height, domXs, tickPosition, strokeStyle, lineWidth);
+
+    // if need display day, plot day text and line
+    if (!this.displayDayAlready) {
+      let dayArr = this.getDayArr(minX, maxX);
+      let dayDomXs = dayArr.map(x=> toDomXCoord_Linear(width, minX, maxX, x));
+      let dayGridLabels = dayArr.map(x=> {
+        let t = new Date();
+        t.setTime(x);
+        return t.getDate();
+      });
+      if (fontSize && fontWeight) {
+        this.textPlot(ctx, width, height+25, dayDomXs, dayGridLabels, fontSize, fontWeight, isItalic);
+      } else {
+        this.textPlot(ctx, width, height+25, dayDomXs, dayGridLabels, 12, 400, isItalic);
+      } 
+      let dayTickPosition = tickPosition==="top"? "bottom" : "top";
+      this.ticPlot(ctx, width, height, dayDomXs, dayTickPosition, strokeStyle, lineWidth);
+    }
+  }
+
+  getDayArr(minX, maxX) {
+    let startTs = Math.floor(minX / 86400000) * 86400000;
+    let endTs = Math.ceil(maxX / 86400000) * 86400000;
+    let arr = [];
+    for (let i=0; i < endTs-startTs; i=i+86400000) {
+      arr.push(startTs + i + SHIFT_HOURS*3600000);
+    }
+    return arr;
   }
 
   getGridLabels(grids) {
@@ -95,6 +128,7 @@ class DateXAxis extends PureComponent {
   }
 
   getMeaningfulDateField(d) {
+    this.displayDayAlready = true;
     if (d.getMilliseconds() === 0) {
       if (d.getSeconds() === 0) {
         if (d.getMinutes() === 0) {
@@ -107,6 +141,7 @@ class DateXAxis extends PureComponent {
             }
             return format(d, "Do");
           }
+          this.displayDayAlready = false;
           return format(d, "HH:00");
         }
         return format(d, "HH:mm");

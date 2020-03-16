@@ -12,8 +12,8 @@ class DateXAxisBundle extends Component {
     this.state = {
       width: 1000,
       height: 50,
-      minX: 0,
-      maxX: 100000000000,
+      minX: 1584000000000,
+      maxX: 1584500000000,
       tickPosition: "top"
     };
   }
@@ -36,13 +36,13 @@ class DateXAxisBundle extends Component {
         </div>
         <div>
           minX:
-          <input type="range" min={-100000000000} max={maxX} step={1}
+          <input type="range" min={1584000000000} max={maxX} step={1}
             value={minX}
             onChange={(ev) => this.setState({ minX: Number.parseInt(ev.target.value) })} />
         </div>
         <div>
           maxX:
-          <input type="range" min={minX} max={100000000000} step={1}
+          <input type="range" min={minX} max={1584500000000} step={1}
             value={maxX}
             onChange={(ev) => this.setState({ maxX: Number.parseInt(ev.target.value) })} />
         </div>
@@ -224,7 +224,7 @@ class YAxisSlabGridBundle extends Component {
             onChange={(ev) => this.setState({ maxY: Number.parseInt(ev.target.value) })} />
         </div>
         <div style={{ display: "flex" }}>
-          <YAxis width={50} height={height}
+          <YAxis widtDateXAxish={50} height={height}
             minY={minY} maxY={maxY}
             tickPosition="right"
           />
