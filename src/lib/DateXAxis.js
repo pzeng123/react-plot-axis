@@ -4,10 +4,10 @@ import PropTypes from "prop-types";
 import { bisect_left, bisect_right } from "bisect";
 import { toDomXCoord_Linear, generateDateGrids } from "plot-utils";
 import { format } from "date-fns";
+import moment from 'moment';
 
 const SHIFT_HOURS_DST = 4;
 const SHIFT_HOURS_NON_DST = 5;
-const SHIFT_HOURS = SHIFT_HOURS_DST;
 
 class DateXAxis extends PureComponent {
   constructor(props) {
@@ -65,8 +65,11 @@ class DateXAxis extends PureComponent {
       let { grids, validFromDiff, validToDiff } = generateDateGrids(minX, maxX, memo.rangeMinX, memo.rangeMaxX);
       memo.validFromDiff = validFromDiff;
       memo.validToDiff = validToDiff;
-      memo.grids = grids;
-      memo.gridLabels = this.getGridLabels(grids);
+
+      // check daylight saving time
+      // if check DST in generateDateGrids, it would be faster
+      memo.grids = grids.map(x => moment(x).isDST()? x - 3600000 : x);  
+      memo.gridLabels = this.getGridLabels(memo.grids);
     }
 
     // Filter
@@ -95,7 +98,7 @@ class DateXAxis extends PureComponent {
       let dayGridLabels = dayArr.map(x=> {
         let t = new Date();
         t.setTime(x);
-        return t.getDate();
+        return format(t, "Do");
       });
       if (fontSize && fontWeight) {
         this.textPlot(ctx, width, height+25, dayDomXs, dayGridLabels, fontSize, fontWeight, isItalic);
@@ -112,7 +115,12 @@ class DateXAxis extends PureComponent {
     let endTs = Math.ceil(maxX / 86400000) * 86400000;
     let arr = [];
     for (let i=0; i < endTs-startTs; i=i+86400000) {
-      arr.push(startTs + i + SHIFT_HOURS*3600000);
+      let currentTs = startTs + i + SHIFT_HOURS_DST * 3600000; 
+      if (moment(currentTs).isDST()) {
+        arr.push(startTs + i + SHIFT_HOURS_DST * 3600000);
+      } else {
+        arr.push(startTs + i + SHIFT_HOURS_NON_DST * 3600000)
+      }
     }
     return arr;
   }
@@ -144,10 +152,13 @@ class DateXAxis extends PureComponent {
           this.displayDayAlready = false;
           return format(d, "HH:00");
         }
+        this.displayDayAlready = false;
         return format(d, "HH:mm");
       }
+      this.displayDayAlready = false;
       return format(d, "HH:mm:ss");
     }
+    this.displayDayAlready = false;
     return format(d, "ss.SSS");
   }
 
