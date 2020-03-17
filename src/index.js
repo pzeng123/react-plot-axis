@@ -12,8 +12,8 @@ class DateXAxisBundle extends Component {
     this.state = {
       width: 1000,
       height: 50,
-      minX: 1583525600000,
-      maxX: 1583725600000,
+      minX: 1583225600000,
+      maxX: 1583925600000,
       tickPosition: "top"
     };
   }
@@ -36,13 +36,13 @@ class DateXAxisBundle extends Component {
         </div>
         <div>
           minX:
-          <input type="range" min={1583525600000} max={maxX} step={1}
+          <input type="range" min={1583225600000} max={maxX} step={1}
             value={minX}
             onChange={(ev) => this.setState({ minX: Number.parseInt(ev.target.value) })} />
         </div>
         <div>
           maxX:
-          <input type="range" min={minX} max={1583725600000} step={1}
+          <input type="range" min={minX} max={1583925600000} step={1}
             value={maxX}
             onChange={(ev) => this.setState({ maxX: Number.parseInt(ev.target.value) })} />
         </div>
@@ -64,6 +64,7 @@ class DateXAxisBundle extends Component {
           strokeStyle="gray"
           lineWidth={2}
           isItalic={true}
+          drawAdditionalDates={true}
         />
       </Fragment>
     );

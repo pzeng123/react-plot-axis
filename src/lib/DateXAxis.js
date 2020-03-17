@@ -6,6 +6,8 @@ import { toDomXCoord_Linear, generateDateGrids } from "plot-utils";
 import { format } from "date-fns";
 import moment from 'moment';
 
+// shift from UTC to EDT(with DST) or EST(without DST)
+// numbers are only for EDT/EST
 const SHIFT_HOURS_DST = 4;
 const SHIFT_HOURS_NON_DST = 5;
 
@@ -48,7 +50,8 @@ class DateXAxis extends PureComponent {
       isItalic,
       fontWeight,
       strokeStyle,
-      lineWidth
+      lineWidth,
+      drawAdditionalDates
     } = this.props;
     this.draw_memo = this.draw_memo || { validFromDiff: 0, validToDiff: -1, rangeMinX: 0, rangeMaxX: -1 };
     let memo = this.draw_memo;
@@ -68,8 +71,12 @@ class DateXAxis extends PureComponent {
 
       // check daylight saving time
       // if check DST in generateDateGrids, it would be faster
-      memo.grids = grids.map(x => moment(x).isDST()? x - 3600000 : x);  
-      memo.gridLabels = this.getGridLabels(memo.grids);
+      // memo.grids = grids.map(x => moment(x).isDST()? x - 3600000 : x);  
+      memo.grids = grids;
+      memo.gridLabels = this.getGridLabels(grids);
+      let a = grids.map(x => moment(x).toString());
+      console.log('moment :', a);
+      
     }
 
     // Filter
@@ -92,7 +99,7 @@ class DateXAxis extends PureComponent {
     this.ticPlot(ctx, width, height, domXs, tickPosition, strokeStyle, lineWidth);
 
     // if need display day, plot day text and line
-    if (!this.displayDayAlready) {
+    if (drawAdditionalDates && !this.displayDayAlready) {
       let dayArr = this.getDayArr(minX, maxX);
       let dayDomXs = dayArr.map(x=> toDomXCoord_Linear(width, minX, maxX, x));
       let dayGridLabels = dayArr.map(x=> {
