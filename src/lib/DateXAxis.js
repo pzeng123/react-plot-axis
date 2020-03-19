@@ -108,7 +108,7 @@ class DateXAxis extends PureComponent {
         t.setTime(x);
         return format(t, "Do");
       });
-      let dayHeight = heightAdditionalDates === null ? height + 25 : height + heightAdditionalDates; 
+      let dayHeight = heightAdditionalDates === null || heightAdditionalDates === undefined ? height + 15 : height + heightAdditionalDates; 
       if (fontSize && fontWeight) {
         this.textPlot(ctx, width, dayHeight, dayDomXs, dayGridLabels, fontSize, fontWeight, isItalic);
       } else {

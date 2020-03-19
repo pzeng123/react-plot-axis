@@ -101,7 +101,8 @@ var DateXAxis = /*#__PURE__*/function (_PureComponent) {
           fontWeight = _this$props2.fontWeight,
           strokeStyle = _this$props2.strokeStyle,
           lineWidth = _this$props2.lineWidth,
-          drawAdditionalDates = _this$props2.drawAdditionalDates;
+          drawAdditionalDates = _this$props2.drawAdditionalDates
+          heightAdditionalDates = _this$props2.heightAdditionalDates;
       this.draw_memo = this.draw_memo || {
         validFromDiff: 0,
         validToDiff: -1,
@@ -163,11 +164,12 @@ var DateXAxis = /*#__PURE__*/function (_PureComponent) {
           t.setTime(x);
           return (0, _dateFns.format)(t, "Do");
         });
+        var dayHeight = heightAdditionalDates === null || heightAdditionalDates === undefined ? height + 15 : height + heightAdditionalDates; 
 
         if (fontSize && fontWeight) {
-          this.textPlot(ctx, width, height + 25, dayDomXs, dayGridLabels, fontSize, fontWeight, isItalic);
+          this.textPlot(ctx, width, dayHeight, dayDomXs, dayGridLabels, fontSize, fontWeight, isItalic);
         } else {
-          this.textPlot(ctx, width, height + 25, dayDomXs, dayGridLabels, 12, 400, isItalic);
+          this.textPlot(ctx, width, dayHeight, dayDomXs, dayGridLabels, 12, 400, isItalic);
         }
 
         var dayTickPosition = tickPosition === "top" ? "bottom" : "top";
