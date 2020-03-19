@@ -4,7 +4,8 @@
   "dependencies": {
     "bisect": "github:zhoulytwinyu/bisect-js",
     "date-fns": "^1.30.1",
-    "plot-utils": "github:zhoulytwinyu/plot-utils"
+    "moment": "^2.24.0",
+    "plot-utils": "github:TwistTRL/plot-utils"
   },
   "peerDependencies": {
     "prop-types": "^15.7.2",

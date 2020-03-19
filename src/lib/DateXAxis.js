@@ -4,11 +4,18 @@ import PropTypes from "prop-types";
 import { bisect_left, bisect_right } from "bisect";
 import { toDomXCoord_Linear, generateDateGrids } from "plot-utils";
 import { format } from "date-fns";
+import moment from 'moment';
+
+// shift from UTC to EDT(with DST) or EST(without DST)
+// numbers are only for EDT/EST
+const SHIFT_HOURS_DST = 4;
+const SHIFT_HOURS_NON_DST = 5;
 
 class DateXAxis extends PureComponent {
   constructor(props) {
     super(props);
     this.ref = React.createRef();
+    this.displayDayAlready = true;
   }
 
   render() {
@@ -43,7 +50,9 @@ class DateXAxis extends PureComponent {
       isItalic,
       fontWeight,
       strokeStyle,
-      lineWidth
+      lineWidth,
+      drawAdditionalDates,
+      heightAdditionalDates
     } = this.props;
     this.draw_memo = this.draw_memo || { validFromDiff: 0, validToDiff: -1, rangeMinX: 0, rangeMaxX: -1 };
     let memo = this.draw_memo;
@@ -60,8 +69,15 @@ class DateXAxis extends PureComponent {
       let { grids, validFromDiff, validToDiff } = generateDateGrids(minX, maxX, memo.rangeMinX, memo.rangeMaxX);
       memo.validFromDiff = validFromDiff;
       memo.validToDiff = validToDiff;
+
+      // check daylight saving time
+      // if check DST in generateDateGrids, it would be faster
+      // memo.grids = grids.map(x => moment(x).isDST()? x - 3600000 : x);  
       memo.grids = grids;
       memo.gridLabels = this.getGridLabels(grids);
+      let a = grids.map(x => moment(x).toString());
+      console.log('moment :', a);
+      
     }
 
     // Filter
@@ -82,6 +98,40 @@ class DateXAxis extends PureComponent {
       this.textPlot(ctx, width, height, domXs, gridLabels, 12, 400, isItalic);
     }
     this.ticPlot(ctx, width, height, domXs, tickPosition, strokeStyle, lineWidth);
+
+    // if need display day, plot day text and line
+    if (drawAdditionalDates && !this.displayDayAlready) {
+      let dayArr = this.getDayArr(minX, maxX);
+      let dayDomXs = dayArr.map(x=> toDomXCoord_Linear(width, minX, maxX, x));
+      let dayGridLabels = dayArr.map(x=> {
+        let t = new Date();
+        t.setTime(x);
+        return format(t, "Do");
+      });
+      let dayHeight = heightAdditionalDates === null || heightAdditionalDates === undefined ? height + 15 : height + heightAdditionalDates; 
+      if (fontSize && fontWeight) {
+        this.textPlot(ctx, width, dayHeight, dayDomXs, dayGridLabels, fontSize, fontWeight, isItalic);
+      } else {
+        this.textPlot(ctx, width, dayHeight, dayDomXs, dayGridLabels, 12, 400, isItalic);
+      } 
+      let dayTickPosition = tickPosition==="top"? "bottom" : "top";
+      this.ticPlot(ctx, width, height, dayDomXs, dayTickPosition, strokeStyle, lineWidth);
+    }
+  }
+
+  getDayArr(minX, maxX) {
+    let startTs = Math.floor(minX / 86400000) * 86400000;
+    let endTs = Math.ceil(maxX / 86400000) * 86400000;
+    let arr = [];
+    for (let i=0; i < endTs-startTs; i=i+86400000) {
+      let currentTs = startTs + i + SHIFT_HOURS_DST * 3600000; 
+      if (moment(currentTs).isDST()) {
+        arr.push(startTs + i + SHIFT_HOURS_DST * 3600000);
+      } else {
+        arr.push(startTs + i + SHIFT_HOURS_NON_DST * 3600000)
+      }
+    }
+    return arr;
   }
 
   getGridLabels(grids) {
@@ -95,6 +145,7 @@ class DateXAxis extends PureComponent {
   }
 
   getMeaningfulDateField(d) {
+    this.displayDayAlready = true;
     if (d.getMilliseconds() === 0) {
       if (d.getSeconds() === 0) {
         if (d.getMinutes() === 0) {
@@ -107,12 +158,16 @@ class DateXAxis extends PureComponent {
             }
             return format(d, "Do");
           }
+          this.displayDayAlready = false;
           return format(d, "HH:00");
         }
+        this.displayDayAlready = false;
         return format(d, "HH:mm");
       }
+      this.displayDayAlready = false;
       return format(d, "HH:mm:ss");
     }
+    this.displayDayAlready = false;
     return format(d, "ss.SSS");
   }
 
