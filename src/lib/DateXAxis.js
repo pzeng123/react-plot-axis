@@ -51,7 +51,8 @@ class DateXAxis extends PureComponent {
       fontWeight,
       strokeStyle,
       lineWidth,
-      drawAdditionalDates
+      drawAdditionalDates,
+      heightAdditionalDates
     } = this.props;
     this.draw_memo = this.draw_memo || { validFromDiff: 0, validToDiff: -1, rangeMinX: 0, rangeMaxX: -1 };
     let memo = this.draw_memo;
@@ -107,10 +108,11 @@ class DateXAxis extends PureComponent {
         t.setTime(x);
         return format(t, "Do");
       });
+      let dayHeight = heightAdditionalDates === null ? height + 25 : height + heightAdditionalDates; 
       if (fontSize && fontWeight) {
-        this.textPlot(ctx, width, height+25, dayDomXs, dayGridLabels, fontSize, fontWeight, isItalic);
+        this.textPlot(ctx, width, dayHeight, dayDomXs, dayGridLabels, fontSize, fontWeight, isItalic);
       } else {
-        this.textPlot(ctx, width, height+25, dayDomXs, dayGridLabels, 12, 400, isItalic);
+        this.textPlot(ctx, width, dayHeight, dayDomXs, dayGridLabels, 12, 400, isItalic);
       } 
       let dayTickPosition = tickPosition==="top"? "bottom" : "top";
       this.ticPlot(ctx, width, height, dayDomXs, dayTickPosition, strokeStyle, lineWidth);
