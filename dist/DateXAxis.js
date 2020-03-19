@@ -101,7 +101,7 @@ var DateXAxis = /*#__PURE__*/function (_PureComponent) {
           fontWeight = _this$props2.fontWeight,
           strokeStyle = _this$props2.strokeStyle,
           lineWidth = _this$props2.lineWidth,
-          drawAdditionalDates = _this$props2.drawAdditionalDates
+          drawAdditionalDates = _this$props2.drawAdditionalDates,
           heightAdditionalDates = _this$props2.heightAdditionalDates;
       this.draw_memo = this.draw_memo || {
         validFromDiff: 0,
