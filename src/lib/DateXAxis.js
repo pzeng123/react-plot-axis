@@ -93,11 +93,14 @@ class DateXAxis extends PureComponent {
             }            
           }
         });
-      } else if (interval === 6*3600*1000) {
+      } else if (interval <= 6*3600*1000 && interval > 3600*1000) {
         filteredArr.forEach(element => {
           let shift_hours = moment(element).isDST() ? SHIFT_HOURS_DST : SHIFT_HOURS_NON_DST;
           if (element%(86400*1000) === (1+shift_hours)*3600*1000){
             newArr.push(element - 1 * 3600*1000);
+            if (interval !== 6 * 3600*1000) {
+              newArr.push(element);
+            }
           } else {
             newArr.push(element);
           }
