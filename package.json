@@ -26,7 +26,6 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "dist": "export NODE_ENV=production && rm -rf dist && mkdir dist && npx babel src/lib --out-dir dist --copy-files",
     "test": "react-scripts build",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
@@ -48,8 +47,8 @@
     ]
   },
   "description": "...",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
+  "main": "src/index.js",
+  "module": "src/index.js",
   "babel": {
     "presets": [
       "@babel/preset-react",
