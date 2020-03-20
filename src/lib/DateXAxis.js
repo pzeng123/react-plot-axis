@@ -3,13 +3,14 @@ import PropTypes from "prop-types";
 
 import { bisect_left, bisect_right } from "bisect";
 import { toDomXCoord_Linear, generateDateGrids } from "plot-utils";
-import { format } from "date-fns";
+import { format, addDays } from "date-fns";
 import moment from 'moment';
 
 // shift from UTC to EDT(with DST) or EST(without DST)
 // numbers are only for EDT/EST
 const SHIFT_HOURS_DST = 4;
 const SHIFT_HOURS_NON_DST = 5;
+const CUSTOM_SET_TIME = 7;
 
 class DateXAxis extends PureComponent {
   constructor(props) {
@@ -51,8 +52,6 @@ class DateXAxis extends PureComponent {
       fontWeight,
       strokeStyle,
       lineWidth,
-      drawAdditionalDates,
-      heightAdditionalDates
     } = this.props;
     this.draw_memo = this.draw_memo || { validFromDiff: 0, validToDiff: -1, rangeMinX: 0, rangeMaxX: -1 };
     let memo = this.draw_memo;
@@ -77,8 +76,41 @@ class DateXAxis extends PureComponent {
     let startIndex = Math.max(0, bisect_right(memo.grids, minX));
     let endIndex = Math.min(memo.grids.length - 1, bisect_left(memo.grids, maxX));
 
-    let domXs = memo.grids.slice(startIndex, endIndex + 1).map((x) => toDomXCoord_Linear(width, minX, maxX, x));
-    let gridLabels = memo.gridLabels.slice(startIndex, endIndex + 1);
+    let filteredArr = memo.grids.slice(startIndex, endIndex + 1);
+    let newArr = [];
+    console.log('filteredArr :', filteredArr); 
+    if (filteredArr && filteredArr.length > 1) {
+      let interval = filteredArr[1] - filteredArr[0];
+      if (interval === 12*3600*1000) {
+        filteredArr.forEach(element => {
+          newArr.push(element);
+          let shift_hours = moment(element).isDST() ? SHIFT_HOURS_DST : SHIFT_HOURS_NON_DST;
+          if (element%(86400*1000) === (7+shift_hours)*3600*1000) {
+            if ( moment(element - 7 * 3600*1000).isDST() !== moment(element).isDST()) {
+              newArr.push(element - (7-1) * 3600*1000);
+            } else {
+              newArr.push(element - 7 * 3600*1000);
+            }            
+          }
+        });
+      } else if (interval === 6*3600*1000) {
+        filteredArr.forEach(element => {
+          let shift_hours = moment(element).isDST() ? SHIFT_HOURS_DST : SHIFT_HOURS_NON_DST;
+          if (element%(86400*1000) === (1+shift_hours)*3600*1000){
+            newArr.push(element - 1 * 3600*1000);
+          } else {
+            newArr.push(element);
+          }
+        });
+      } else {
+        newArr = filteredArr;
+      }
+    }
+    newArr.sort((a, b) => a - b);
+    console.log('newArr :', newArr);
+
+    let domXs = newArr.map((x) => toDomXCoord_Linear(width, minX, maxX, x));
+    let gridLabels = this.getGridLabels(newArr);
 
     // Plot
     let canvas = this.ref.current;
@@ -92,24 +124,24 @@ class DateXAxis extends PureComponent {
     }
     this.ticPlot(ctx, width, height, domXs, tickPosition, strokeStyle, lineWidth);
 
-    // if need display day, plot day text and line
-    if (drawAdditionalDates && !this.displayDayAlready) {
-      let dayArr = this.getDayArr(minX, maxX);
-      let dayDomXs = dayArr.map(x=> toDomXCoord_Linear(width, minX, maxX, x));
-      let dayGridLabels = dayArr.map(x=> {
-        let t = new Date();
-        t.setTime(x);
-        return format(t, "Do");
-      });
-      let dayHeight = heightAdditionalDates === null || heightAdditionalDates === undefined ? height + 15 : height + heightAdditionalDates; 
-      if (fontSize && fontWeight) {
-        this.textPlot(ctx, width, dayHeight, dayDomXs, dayGridLabels, fontSize, fontWeight, isItalic);
-      } else {
-        this.textPlot(ctx, width, dayHeight, dayDomXs, dayGridLabels, 12, 400, isItalic);
-      } 
-      let dayTickPosition = tickPosition==="top"? "bottom" : "top";
-      this.ticPlot(ctx, width, height, dayDomXs, dayTickPosition, strokeStyle, lineWidth);
-    }
+    // // if need display day, plot day text and line
+    // if (drawAdditionalDates && !this.displayDayAlready) {
+    //   let dayArr = this.getDayArr(minX, maxX);
+    //   let dayDomXs = dayArr.map(x=> toDomXCoord_Linear(width, minX, maxX, x));
+    //   let dayGridLabels = dayArr.map(x=> {
+    //     let t = new Date();
+    //     t.setTime(x);
+    //     return format(t, "Do");
+    //   });
+    //   let dayHeight = heightAdditionalDates === null || heightAdditionalDates === undefined ? height + 15 : height + heightAdditionalDates; 
+    //   if (fontSize && fontWeight) {
+    //     this.textPlot(ctx, width, dayHeight, dayDomXs, dayGridLabels, fontSize, fontWeight, isItalic);
+    //   } else {
+    //     this.textPlot(ctx, width, dayHeight, dayDomXs, dayGridLabels, 12, 400, isItalic);
+    //   } 
+    //   let dayTickPosition = tickPosition==="top"? "bottom" : "top";
+    //   this.ticPlot(ctx, width, height, dayDomXs, dayTickPosition, strokeStyle, lineWidth);
+    // }
   }
 
   getDayArr(minX, maxX) {
