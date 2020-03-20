@@ -68,16 +68,9 @@ class DateXAxis extends PureComponent {
       memo.rangeMaxX = maxX + 10 * diffX;
       let { grids, validFromDiff, validToDiff } = generateDateGrids(minX, maxX, memo.rangeMinX, memo.rangeMaxX);
       memo.validFromDiff = validFromDiff;
-      memo.validToDiff = validToDiff;
-
-      // check daylight saving time
-      // if check DST in generateDateGrids, it would be faster
-      // memo.grids = grids.map(x => moment(x).isDST()? x - 3600000 : x);  
+      memo.validToDiff = validToDiff;  
       memo.grids = grids;
-      memo.gridLabels = this.getGridLabels(grids);
-      let a = grids.map(x => moment(x).toString());
-      console.log('moment :', a);
-      
+      memo.gridLabels = this.getGridLabels(grids);     
     }
 
     // Filter

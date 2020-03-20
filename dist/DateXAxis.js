@@ -122,16 +122,9 @@ var DateXAxis = /*#__PURE__*/function (_PureComponent) {
             validToDiff = _generateDateGrids.validToDiff;
 
         memo.validFromDiff = validFromDiff;
-        memo.validToDiff = validToDiff; // check daylight saving time
-        // if check DST in generateDateGrids, it would be faster
-        // memo.grids = grids.map(x => moment(x).isDST()? x - 3600000 : x);  
-
+        memo.validToDiff = validToDiff;
         memo.grids = grids;
         memo.gridLabels = this.getGridLabels(grids);
-        var a = grids.map(function (x) {
-          return (0, _moment.default)(x).toString();
-        });
-        console.log('moment :', a);
       } // Filter
 
 

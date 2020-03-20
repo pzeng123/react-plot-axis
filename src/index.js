@@ -65,6 +65,7 @@ class DateXAxisBundle extends Component {
           lineWidth={2}
           isItalic={true}
           drawAdditionalDates={true}
+          heightAdditionalDates={5}
         />
       </Fragment>
     );
