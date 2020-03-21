@@ -55,7 +55,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 // numbers are only for EDT/EST
 var SHIFT_HOURS_DST = 4;
 var SHIFT_HOURS_NON_DST = 5;
-var CUSTOM_SET_TIME = 7;
+var CUSTOM_DAY_START_HOUR = 7;
 
 var DateXAxis = /*#__PURE__*/function (_PureComponent) {
   _inherits(DateXAxis, _PureComponent);
@@ -142,26 +142,33 @@ var DateXAxis = /*#__PURE__*/function (_PureComponent) {
       var startIndex = Math.max(0, (0, _bisect.bisect_right)(memo.grids, minX));
       var endIndex = Math.min(memo.grids.length - 1, (0, _bisect.bisect_left)(memo.grids, maxX));
       var filteredArr = memo.grids.slice(startIndex, endIndex + 1);
-      var newArr = [];
-      console.log('filteredArr :', filteredArr);
+      var newArr = []; // a is not DST, b is DST
+      // let a = moment(1541311200000);
+      // console.log("a.isDST() :", a.isDST());
+      // console.log("a.format() :", a.format());
+      // let b = moment(1541311200000 - 3600000);
+      // console.log('b.isDST() :', b.isDST());
+      // console.log("b.format() :", b.format());
 
       if (filteredArr && filteredArr.length > 1) {
         var interval = filteredArr[1] - filteredArr[0];
 
         if (interval === 12 * 3600 * 1000) {
+          // interval is 12 hours, add date display
           filteredArr.forEach(function (element) {
             newArr.push(element);
             var shift_hours = (0, _moment.default)(element).isDST() ? SHIFT_HOURS_DST : SHIFT_HOURS_NON_DST;
 
-            if (element % (86400 * 1000) === (7 + shift_hours) * 3600 * 1000) {
-              if ((0, _moment.default)(element - 7 * 3600 * 1000).isDST() !== (0, _moment.default)(element).isDST()) {
-                newArr.push(element - (7 - 1) * 3600 * 1000);
+            if (element % (86400 * 1000) === (CUSTOM_DAY_START_HOUR + shift_hours) * 3600 * 1000) {
+              if ((0, _moment.default)(element - CUSTOM_DAY_START_HOUR * 3600 * 1000).isDST() !== (0, _moment.default)(element).isDST()) {
+                newArr.push(element - (CUSTOM_DAY_START_HOUR - 1) * 3600 * 1000);
               } else {
-                newArr.push(element - 7 * 3600 * 1000);
+                newArr.push(element - CUSTOM_DAY_START_HOUR * 3600 * 1000);
               }
             }
           });
         } else if (interval <= 6 * 3600 * 1000 && interval > 3600 * 1000) {
+          // interval is between 1 hour and 16 hours
           filteredArr.forEach(function (element) {
             var shift_hours = (0, _moment.default)(element).isDST() ? SHIFT_HOURS_DST : SHIFT_HOURS_NON_DST;
 
@@ -178,7 +185,8 @@ var DateXAxis = /*#__PURE__*/function (_PureComponent) {
         } else {
           newArr = filteredArr;
         }
-      }
+      } // adjusted for daylight saving time and dates, time points array newArr size is small: ~10
+
 
       newArr.sort(function (a, b) {
         return a - b;
@@ -208,12 +216,12 @@ var DateXAxis = /*#__PURE__*/function (_PureComponent) {
       //     t.setTime(x);
       //     return format(t, "Do");
       //   });
-      //   let dayHeight = heightAdditionalDates === null || heightAdditionalDates === undefined ? height + 15 : height + heightAdditionalDates; 
+      //   let dayHeight = heightAdditionalDates === null || heightAdditionalDates === undefined ? height + 15 : height + heightAdditionalDates;
       //   if (fontSize && fontWeight) {
       //     this.textPlot(ctx, width, dayHeight, dayDomXs, dayGridLabels, fontSize, fontWeight, isItalic);
       //   } else {
       //     this.textPlot(ctx, width, dayHeight, dayDomXs, dayGridLabels, 12, 400, isItalic);
-      //   } 
+      //   }
       //   let dayTickPosition = tickPosition==="top"? "bottom" : "top";
       //   this.ticPlot(ctx, width, height, dayDomXs, dayTickPosition, strokeStyle, lineWidth);
       // }
