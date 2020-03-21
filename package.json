@@ -47,8 +47,8 @@
     ]
   },
   "description": "...",
-  "main": "src/index.js",
-  "module": "src/index.js",
+  "main": "src/lib/index.js",
+  "module": "src/lib/index.js",
   "babel": {
     "presets": [
       "@babel/preset-react",
