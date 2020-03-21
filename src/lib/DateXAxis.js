@@ -87,17 +87,27 @@ class DateXAxis extends PureComponent {
     let endIndex = Math.min(memo.grids.length - 1, bisect_left(memo.grids, maxX));
     let filteredArr = memo.grids.slice(startIndex, endIndex + 1);
     let newArr = [];
+    console.log('filteredArr :', filteredArr);
+
+
+
 
 
     // a is not DST, b is DST
-    // let a = moment(1541311200000);
-    // console.log("a.isDST() :", a.isDST());
-    // console.log("a.format() :", a.format());
+//     let a = moment(1541311200000);
+//     console.log("a.isDST() :", a.isDST());
+//     console.log("a.format() :", a.format());
 
-    // let b = moment(1541311200000 - 3600000);
-    // console.log('b.isDST() :', b.isDST());
-    // console.log("b.format() :", b.format());
+//     let b = moment(1541311200000 - 3600000);
+//     console.log('b.isDST() :', b.isDST());
+//     console.log("b.format() :", b.format());
 
+//     let c = moment(1541307600000 - 3600000);
+//     console.log('c.isDST() :', c.isDST());
+// console.log('c.format() :', c.format());
+
+// todo: when out of DST, got error 
+// now works for < 6hours > 1 hour?
 
     if (filteredArr && filteredArr.length > 1) {
       let interval = filteredArr[1] - filteredArr[0];
@@ -122,7 +132,14 @@ class DateXAxis extends PureComponent {
         filteredArr.forEach(element => {
           let shift_hours = moment(element).isDST() ? SHIFT_HOURS_DST : SHIFT_HOURS_NON_DST;
           if (element % (86400 * 1000) === (1 + shift_hours) * 3600 * 1000) {
-            newArr.push(element - 1 * 3600 * 1000);
+            let newTs = element - 3600 * 1000;
+            let newTS_shift = moment(newTs).isDST() ? SHIFT_HOURS_DST : SHIFT_HOURS_NON_DST;
+            if (newTs % (86400 * 1000) === ((1 + newTS_shift) * 3600*1000)) {
+
+              newArr.push(newTs - 1 * 3600 * 1000);
+            } else {
+              newArr.push(newTs);
+            }
             if (interval !== 6 * 3600 * 1000) {
               newArr.push(element);
             }

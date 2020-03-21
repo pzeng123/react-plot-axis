@@ -6,14 +6,17 @@ import { HashRouter as Router, Route, Link } from "react-router-dom";
 // CSS
 import "./index.css";
 
+const INIT_MINX = 1541111200000;
+const INIT_MAXX = 1541611200000;
+
 class DateXAxisBundle extends Component {
   constructor(props) {
     super(props);
     this.state = {
       width: 1000,
       height: 50,
-      minX: 1583225600000,
-      maxX: 1583925600000,
+      minX: INIT_MINX,
+      maxX: INIT_MAXX,
       tickPosition: "top"
     };
   }
@@ -36,13 +39,13 @@ class DateXAxisBundle extends Component {
         </div>
         <div>
           minX:
-          <input type="range" min={1583225600000} max={maxX} step={1}
+          <input type="range" min={INIT_MINX} max={maxX} step={1}
             value={minX}
             onChange={(ev) => this.setState({ minX: Number.parseInt(ev.target.value) })} />
         </div>
         <div>
           maxX:
-          <input type="range" min={minX} max={1583925600000} step={1}
+          <input type="range" min={minX} max={INIT_MAXX} step={1}
             value={maxX}
             onChange={(ev) => this.setState({ maxX: Number.parseInt(ev.target.value) })} />
         </div>
