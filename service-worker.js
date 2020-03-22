@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/react-plot-axis/precache-manifest.1d3bd8fcd068733a0d345aab8f663a52.js"
+  "/react-plot-axis/precache-manifest.f5fa158304a48c912d4145e7e4b5bfc1.js"
 );
 
 self.addEventListener('message', (event) => {
