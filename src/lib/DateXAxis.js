@@ -87,30 +87,9 @@ class DateXAxis extends PureComponent {
     let endIndex = Math.min(memo.grids.length - 1, bisect_left(memo.grids, maxX));
     let filteredArr = memo.grids.slice(startIndex, endIndex + 1);
     let newArr = [];
-    console.log('filteredArr :', filteredArr);
 
-
-
-
-
-    // a is not DST, b is DST
-//     let a = moment(1541311200000);
-//     console.log("a.isDST() :", a.isDST());
-//     console.log("a.format() :", a.format());
-
-//     let b = moment(1541311200000 - 3600000);
-//     console.log('b.isDST() :', b.isDST());
-//     console.log("b.format() :", b.format());
-
-//     let c = moment(1541307600000 - 3600000);
-//     console.log('c.isDST() :', c.isDST());
-// console.log('c.format() :', c.format());
-
-// todo: when out of DST, got error 
-// now works for < 6hours > 1 hour?
-
-    if (filteredArr && filteredArr.length > 1) {
-      let interval = filteredArr[1] - filteredArr[0];
+    if (filteredArr && filteredArr.length > 2) {
+      let interval = this.getInterval(filteredArr);
       if (interval === 12 * 3600 * 1000) {
         // interval is 12 hours, add date display
         filteredArr.forEach(element => {
@@ -121,28 +100,39 @@ class DateXAxis extends PureComponent {
               moment(element - CUSTOM_DAY_START_HOUR * 3600 * 1000).isDST() !==
               moment(element).isDST()
             ) {
-              newArr.push(element - (CUSTOM_DAY_START_HOUR - 1) * 3600 * 1000);
+              let newTs = element - CUSTOM_DAY_START_HOUR * 3600 * 1000;
+              if (moment(newTs).isDST()) {
+                // DST to non DST
+                newArr.push(newTs - 3600*1000);
+              } else {
+                newArr.push(newTs);
+              }
             } else {
               newArr.push(element - CUSTOM_DAY_START_HOUR * 3600 * 1000);
             }
           }
         });
-      } else if (interval <= 6 * 3600 * 1000 && interval > 3600 * 1000) {
+      } else if (interval <= 6 * 3600 * 1000 && interval >= 3600 * 1000) {
         // interval is between 1 hour and 16 hours
         filteredArr.forEach(element => {
           let shift_hours = moment(element).isDST() ? SHIFT_HOURS_DST : SHIFT_HOURS_NON_DST;
           if (element % (86400 * 1000) === (1 + shift_hours) * 3600 * 1000) {
-            let newTs = element - 3600 * 1000;
-            let newTS_shift = moment(newTs).isDST() ? SHIFT_HOURS_DST : SHIFT_HOURS_NON_DST;
-            if (newTs % (86400 * 1000) === ((1 + newTS_shift) * 3600*1000)) {
-
-              newArr.push(newTs - 1 * 3600 * 1000);
+            let newTs = element - 3600*1000;
+            if (moment(newTs).isDST()) {
+              // DST to non DST
+              newArr.push(newTs - 3600*1000);
+              if (interval !== 6 * 3600 * 1000) {
+                newArr.push(newTs);
+              }
+              if (interval <= 3 * 3600 * 1000) {
+                newArr.push(element);
+              }
             } else {
               newArr.push(newTs);
-            }
-            if (interval !== 6 * 3600 * 1000) {
-              newArr.push(element);
-            }
+              if (interval !== 6 * 3600 * 1000) {
+                newArr.push(element);
+              }
+            }            
           } else {
             newArr.push(element);
           }
@@ -150,10 +140,11 @@ class DateXAxis extends PureComponent {
       } else {
         newArr = filteredArr;
       }
+    } else {
+      newArr = filteredArr;
     }
     // adjusted for daylight saving time and dates, time points array newArr size is small: ~10
     newArr.sort((a, b) => a - b);
-    console.log('newArr :', newArr);
 
     let domXs = newArr.map(x => toDomXCoord_Linear(width, minX, maxX, x));
     let gridLabels = this.getGridLabels(newArr);
@@ -189,6 +180,32 @@ class DateXAxis extends PureComponent {
     //   this.ticPlot(ctx, width, height, dayDomXs, dayTickPosition, strokeStyle, lineWidth);
     // }
   }
+
+  getInterval(arr) {
+    if (arr.length === 3) {
+      let a = (arr[1] - arr[0])/3600000;
+      let b = (arr[2] - arr[1])/3600000;
+      if (a === 12 || b === 12) {
+        return 12 * 3600*1000;
+      } else if (a === 6 || b === 6) {
+        return 6 * 3600*1000;
+      } else {
+        return Math.min(a, b) * 3600*1000;
+      }
+    }
+
+    let dict = {};
+    for (let i = 1; i < arr.length; i++) {
+      let curInterval = arr[i] - arr[i-1];
+      if (curInterval in dict) {
+        return curInterval;
+      } else {
+        dict[curInterval] = 1;
+      }
+    }
+    return null;
+  }
+
 
   getDayArr(minX, maxX) {
     let startTs = Math.floor(minX / 86400000) * 86400000;

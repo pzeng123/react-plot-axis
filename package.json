@@ -20,7 +20,7 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-router-dom": "^5.0.0",
-    "react-scripts": "^3.0.1"
+    "react-scripts": "^3.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -57,7 +57,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/TwistTRL/react-plot-axis.git"
+    "url": "git+https://github.com/pzeng123/react-plot-axis.git"
   },
   "keywords": [
     "react",
@@ -68,7 +68,7 @@
   "author": "Lingyu Zhou",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/TwistTRL/react-plot-axis/issues"
+    "url": "https://github.com/pzeng123/react-plot-axis/issues"
   },
-  "homepage": "https://twisttrl.github.io/react-plot-axis"
+  "homepage": "https://pzeng123.github.io/react-plot-axis"
 }

@@ -142,16 +142,10 @@ var DateXAxis = /*#__PURE__*/function (_PureComponent) {
       var startIndex = Math.max(0, (0, _bisect.bisect_right)(memo.grids, minX));
       var endIndex = Math.min(memo.grids.length - 1, (0, _bisect.bisect_left)(memo.grids, maxX));
       var filteredArr = memo.grids.slice(startIndex, endIndex + 1);
-      var newArr = []; // a is not DST, b is DST
-      // let a = moment(1541311200000);
-      // console.log("a.isDST() :", a.isDST());
-      // console.log("a.format() :", a.format());
-      // let b = moment(1541311200000 - 3600000);
-      // console.log('b.isDST() :', b.isDST());
-      // console.log("b.format() :", b.format());
+      var newArr = [];
 
-      if (filteredArr && filteredArr.length > 1) {
-        var interval = filteredArr[1] - filteredArr[0];
+      if (filteredArr && filteredArr.length > 2) {
+        var interval = this.getInterval(filteredArr);
 
         if (interval === 12 * 3600 * 1000) {
           // interval is 12 hours, add date display
@@ -161,22 +155,44 @@ var DateXAxis = /*#__PURE__*/function (_PureComponent) {
 
             if (element % (86400 * 1000) === (CUSTOM_DAY_START_HOUR + shift_hours) * 3600 * 1000) {
               if ((0, _moment.default)(element - CUSTOM_DAY_START_HOUR * 3600 * 1000).isDST() !== (0, _moment.default)(element).isDST()) {
-                newArr.push(element - (CUSTOM_DAY_START_HOUR - 1) * 3600 * 1000);
+                var newTs = element - CUSTOM_DAY_START_HOUR * 3600 * 1000;
+
+                if ((0, _moment.default)(newTs).isDST()) {
+                  // DST to non DST
+                  newArr.push(newTs - 3600 * 1000);
+                } else {
+                  newArr.push(newTs);
+                }
               } else {
                 newArr.push(element - CUSTOM_DAY_START_HOUR * 3600 * 1000);
               }
             }
           });
-        } else if (interval <= 6 * 3600 * 1000 && interval > 3600 * 1000) {
+        } else if (interval <= 6 * 3600 * 1000 && interval >= 3600 * 1000) {
           // interval is between 1 hour and 16 hours
           filteredArr.forEach(function (element) {
             var shift_hours = (0, _moment.default)(element).isDST() ? SHIFT_HOURS_DST : SHIFT_HOURS_NON_DST;
 
             if (element % (86400 * 1000) === (1 + shift_hours) * 3600 * 1000) {
-              newArr.push(element - 1 * 3600 * 1000);
+              var newTs = element - 3600 * 1000;
 
-              if (interval !== 6 * 3600 * 1000) {
-                newArr.push(element);
+              if ((0, _moment.default)(newTs).isDST()) {
+                // DST to non DST
+                newArr.push(newTs - 3600 * 1000);
+
+                if (interval !== 6 * 3600 * 1000) {
+                  newArr.push(newTs);
+                }
+
+                if (interval <= 3 * 3600 * 1000) {
+                  newArr.push(element);
+                }
+              } else {
+                newArr.push(newTs);
+
+                if (interval !== 6 * 3600 * 1000) {
+                  newArr.push(element);
+                }
               }
             } else {
               newArr.push(element);
@@ -185,13 +201,14 @@ var DateXAxis = /*#__PURE__*/function (_PureComponent) {
         } else {
           newArr = filteredArr;
         }
+      } else {
+        newArr = filteredArr;
       } // adjusted for daylight saving time and dates, time points array newArr size is small: ~10
 
 
       newArr.sort(function (a, b) {
         return a - b;
       });
-      console.log('newArr :', newArr);
       var domXs = newArr.map(function (x) {
         return (0, _plotUtils.toDomXCoord_Linear)(width, minX, maxX, x);
       });
@@ -225,6 +242,36 @@ var DateXAxis = /*#__PURE__*/function (_PureComponent) {
       //   let dayTickPosition = tickPosition==="top"? "bottom" : "top";
       //   this.ticPlot(ctx, width, height, dayDomXs, dayTickPosition, strokeStyle, lineWidth);
       // }
+    }
+  }, {
+    key: "getInterval",
+    value: function getInterval(arr) {
+      if (arr.length === 3) {
+        var a = (arr[1] - arr[0]) / 3600000;
+        var b = (arr[2] - arr[1]) / 3600000;
+
+        if (a === 12 || b === 12) {
+          return 12 * 3600 * 1000;
+        } else if (a === 6 || b === 6) {
+          return 6 * 3600 * 1000;
+        } else {
+          return Math.min(a, b) * 3600 * 1000;
+        }
+      }
+
+      var dict = {};
+
+      for (var i = 1; i < arr.length; i++) {
+        var curInterval = arr[i] - arr[i - 1];
+
+        if (curInterval in dict) {
+          return curInterval;
+        } else {
+          dict[curInterval] = 1;
+        }
+      }
+
+      return null;
     }
   }, {
     key: "getDayArr",
