@@ -176,7 +176,7 @@ var DateXAxis = /*#__PURE__*/function (_PureComponent) {
             if (element % (86400 * 1000) === (1 + shift_hours) * 3600 * 1000) {
               var newTs = element - 3600 * 1000;
 
-              if ((0, _moment.default)(newTs).isDST()) {
+              if ((0, _moment.default)(newTs).isDST() && !(0, _moment.default)(newTs + 12 * 3600 * 1000).isDST()) {
                 // DST to non DST
                 newArr.push(newTs - 3600 * 1000);
 
