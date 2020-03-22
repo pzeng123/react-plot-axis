@@ -1,15 +1,22 @@
 {
   "files": {
     "main.css": "/react-plot-axis/static/css/main.9d313dd0.chunk.css",
-    "main.js": "/react-plot-axis/static/js/main.d19bd926.chunk.js",
-    "main.js.map": "/react-plot-axis/static/js/main.d19bd926.chunk.js.map",
-    "runtime~main.js": "/react-plot-axis/static/js/runtime~main.176a1312.js",
-    "runtime~main.js.map": "/react-plot-axis/static/js/runtime~main.176a1312.js.map",
-    "static/js/2.b35c4456.chunk.js": "/react-plot-axis/static/js/2.b35c4456.chunk.js",
-    "static/js/2.b35c4456.chunk.js.map": "/react-plot-axis/static/js/2.b35c4456.chunk.js.map",
+    "main.js": "/react-plot-axis/static/js/main.e6f264a2.chunk.js",
+    "main.js.map": "/react-plot-axis/static/js/main.e6f264a2.chunk.js.map",
+    "runtime-main.js": "/react-plot-axis/static/js/runtime-main.a05b3b9c.js",
+    "runtime-main.js.map": "/react-plot-axis/static/js/runtime-main.a05b3b9c.js.map",
+    "static/js/2.4790941f.chunk.js": "/react-plot-axis/static/js/2.4790941f.chunk.js",
+    "static/js/2.4790941f.chunk.js.map": "/react-plot-axis/static/js/2.4790941f.chunk.js.map",
     "index.html": "/react-plot-axis/index.html",
-    "precache-manifest.d1b830314c3fed9b3d38ef10bca76f13.js": "/react-plot-axis/precache-manifest.d1b830314c3fed9b3d38ef10bca76f13.js",
+    "precache-manifest.1d3bd8fcd068733a0d345aab8f663a52.js": "/react-plot-axis/precache-manifest.1d3bd8fcd068733a0d345aab8f663a52.js",
     "service-worker.js": "/react-plot-axis/service-worker.js",
-    "static/css/main.9d313dd0.chunk.css.map": "/react-plot-axis/static/css/main.9d313dd0.chunk.css.map"
-  }
+    "static/css/main.9d313dd0.chunk.css.map": "/react-plot-axis/static/css/main.9d313dd0.chunk.css.map",
+    "static/js/2.4790941f.chunk.js.LICENSE.txt": "/react-plot-axis/static/js/2.4790941f.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.a05b3b9c.js",
+    "static/js/2.4790941f.chunk.js",
+    "static/css/main.9d313dd0.chunk.css",
+    "static/js/main.e6f264a2.chunk.js"
+  ]
 }
