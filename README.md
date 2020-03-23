@@ -3,6 +3,9 @@ This package include react components to draw canvas-based X axis, Y axis, and h
 
 ## Update:
 
+
+* DST -> Non DST 
+
 current version: 
 
 ![current version](https://github.com/pzeng123/react-plot-axis/blob/master/public/cur.PNG "displaying date")
@@ -12,6 +15,7 @@ origin version:
 ![origin version](https://github.com/pzeng123/react-plot-axis/blob/master/public/org.PNG "not displaying date")
 
 ---
+* another figure
 
 current version:
 
