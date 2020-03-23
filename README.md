@@ -2,11 +2,22 @@
 This package include react components to draw canvas-based X axis, Y axis, and horizontal or vertical grids.
 
 ## Update:
+
+current version: 
+
 ![current version](https://github.com/pzeng123/react-plot-axis/blob/master/public/cur.PNG "displaying date")
+
+origin version:
 
 ![origin version](https://github.com/pzeng123/react-plot-axis/blob/master/public/org.PNG "not displaying date")
 
+---
+
+current version:
+
 ![current version 2](https://github.com/pzeng123/react-plot-axis/blob/master/public/cur2.PNG "displaying date")
+
+origin version:
 
 ![origin version 2](https://github.com/pzeng123/react-plot-axis/blob/master/public/org2.PNG "not displaying date")
 
